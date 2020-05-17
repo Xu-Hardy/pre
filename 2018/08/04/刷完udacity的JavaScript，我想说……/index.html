@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|Amita:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="刷完了udacity上JS的入门课，纯粹为了学习开发小程序而补的前端知识。 一开始在SoloLearn上最先接触的JS，只用了三个小时不到就把证书刷下来了，这毕竟是我在SoloLearn的第一个证书，先炫一下哈！  进入正题，JavaScript起初为了出名特地把名字取得和Java很像，因为Java一直都很火，Java web, 移动开发，服务器。当然如果学过java在去学JS得话，就会感觉者这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="刷完udacity的JavaScript，我想说……">
+<meta property="og:url" content="http://yoursite.com/2018/08/04/%E5%88%B7%E5%AE%8Cudacity%E7%9A%84JavaScript%EF%BC%8C%E6%88%91%E6%83%B3%E8%AF%B4%E2%80%A6%E2%80%A6/index.html">
+<meta property="og:site_name" content="孤虹">
+<meta property="og:description" content="刷完了udacity上JS的入门课，纯粹为了学习开发小程序而补的前端知识。 一开始在SoloLearn上最先接触的JS，只用了三个小时不到就把证书刷下来了，这毕竟是我在SoloLearn的第一个证书，先炫一下哈！  进入正题，JavaScript起初为了出名特地把名字取得和Java很像，因为Java一直都很火，Java web, 移动开发，服务器。当然如果学过java在去学JS得话，就会感觉者这">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-90d2970b0c09108e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-57405a5d2fc54e65.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-1206601061b03fb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-ca17f5a347d43654.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-83b9b2a9a9dfa14d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-cf3c8dc3bc6a79ba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-3a4bd6f0dce5df63.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-207e8750e8aaec98.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-3ee6b6c0b64f57d3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-e992e43a4809b1f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-6341165c0dbe9c38.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-a5381bb23b172984.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-98d4425e4b7da977.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-8d4fa2a5be50297a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-273a4a9a5db09305.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-b17a6a196c0a981b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-69f0d611393edd8c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-1ad1f9629d81e67a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-75d02f9456f49d1a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-d8fb279d96d7d789.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-6a616ec51720c244.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-64fce095fe26aed8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-d1af1d1248a355f4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-3b8a8c607746b420.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-7b6db2972cdb1976.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-b83da5d47316d838.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-f254df1e3b75db1d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-fb6c2319a36f287d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-8449e39168706b61.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-b1a30695bb8bb997.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-6bd750c984ffcadd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-a97dd0685ad1a86a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-19bac43ac0cbe6b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-8970f1519f4830f3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-235c22330df2c81b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-94f75fa83d1b3c36.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-4c633c057a013776.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-c0b3f8678df0bc5f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-bad14ec650686f9d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-79c72273a461e43f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-1df78b9950319a33.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-ea214f6084b8107c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5415189-1a931cb51bce4f24.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2018-08-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-07T10:42:11.214Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/5415189-90d2970b0c09108e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+<link rel="canonical" href="http://yoursite.com/2018/08/04/%E5%88%B7%E5%AE%8Cudacity%E7%9A%84JavaScript%EF%BC%8C%E6%88%91%E6%83%B3%E8%AF%B4%E2%80%A6%E2%80%A6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>刷完udacity的JavaScript，我想说…… | 孤虹</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">孤虹</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>معلومات</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>الوسوم<span class="badge">2</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>التصنيفات<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>الأرشيفات<span class="badge">16</span></a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>التقويم</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>بحث
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="بحث..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/national97" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/04/%E5%88%B7%E5%AE%8Cudacity%E7%9A%84JavaScript%EF%BC%8C%E6%88%91%E6%83%B3%E8%AF%B4%E2%80%A6%E2%80%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="孤虹">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          刷完udacity的JavaScript，我想说……
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">نُشر في</span>
+
+              <time title="أُنشأ: 2018-08-04 00:00:00" itemprop="dateCreated datePublished" datetime="2018-08-04T00:00:00+08:00">2018-08-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">عُدل في</span>
+                <time title="عُدل: 2020-05-07 18:42:11" itemprop="dateModified" datetime="2020-05-07T18:42:11+08:00">2020-05-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">في</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="مشاهدات" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">مشاهدات: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="عدد الحروف في المقال">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">عدد الحروف في المقال: </span>
+              <span>1.6k</span>
+            </span>
+            <span class="post-meta-item" title="زمن القراءة">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">زمن القراءة &asymp;</span>
+              <span>1 دقائق.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="https://upload-images.jianshu.io/upload_images/5415189-90d2970b0c09108e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="前言"></p>
+<p>刷完了udacity上JS的入门课，纯粹为了学习开发小程序而补的前端知识。</p>
+<p>一开始在SoloLearn上最先接触的JS，只用了三个小时不到就把证书刷下来了，这毕竟是我在SoloLearn的第一个证书，先炫一下哈！</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-57405a5d2fc54e65.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="SoloLearn证书"></p>
+<p>进入正题，JavaScript起初为了出名特地把名字取得和Java很像，因为Java一直都很火，Java web, 移动开发，服务器。当然如果学过java在去学JS得话，就会感觉者这门语言非常得友好，沿袭了Java的大部分风格，这里就说几点不同吧。</p>
+<h2 id="1-数据类型"><a href="#1-数据类型" class="headerlink" title="1. 数据类型"></a>1. 数据类型</h2><p>#####1.1自动判断类型。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-1206601061b03fb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="JavaScript的数据类型"><br>在传统的语言里，要定义变量，都要是使用int ，float , double ,boolean这些关键字，但是在JS里完全不用。直接使用var关键字，变量的数据类型完全由系统自动判断。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#java8,c,c++都要这么写</span><br><span class="line"></span><br><span class="line">int age&#x3D; 25;</span><br><span class="line">float pi &#x3D; 3.14;</span><br><span class="line"></span><br><span class="line">#听说Java9也使用var 自动判断，不过，本人还是坚守Java8.</span><br></pre></td></tr></table></figure>
+
+<p>而在JS里就可以这么写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var name &#x3D; &#39;javascript&#39;;</span><br><span class="line">var age &#x3D; 25;</span><br><span class="line">var pi &#x3D; 3.14;</span><br><span class="line">var message &#x3D; [&#39;hello&#39;, &#39;nihao&#39;];</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;注：JavaScript里single quote 和 double quote 没有区别，本人更加倾向single quote,JS好多地方和python很像。</span><br></pre></td></tr></table></figure>
+
+<h5 id="1-2-字符串拼接"><a href="#1-2-字符串拼接" class="headerlink" title="1.2 字符串拼接"></a>1.2 字符串拼接</h5><p>javaScript的字符串自动拼接，可以在这里把number直接转成字符串。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-ca17f5a347d43654.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="字符串自动拼接"></p>
+<p><strong>注：console.log()是输出日志，相当于Java的System.out.print()。</strong></p>
+<hr>
+<h5 id="1-3-绝对相等"><a href="#1-3-绝对相等" class="headerlink" title="1.3 绝对相等"></a>1.3 绝对相等</h5><p>javascript使用了自动判断类型，所以使用===表示数值和数据类型都相等，而==仅仅表示数值相等。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-83b9b2a9a9dfa14d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="JavaScript绝对相等"></p>
+<hr>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-cf3c8dc3bc6a79ba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="实际测试"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-3a4bd6f0dce5df63.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="比较运算符"></p>
+<h2 id="2-真假值"><a href="#2-真假值" class="headerlink" title="2.真假值"></a>2.真假值</h2><p>在JavaScript里，视为真值的有non-zero number, non-empty string, object, array, true。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-207e8750e8aaec98.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Truthy Values"></p>
+<p>在JavaScript里，视为假值的有null, undefined, 0, empty string,  NaN, fasle。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-3ee6b6c0b64f57d3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Fasly Values"></p>
+<p><em>三元运算符是从c语言一直沿袭下来的，Java也有。不过没怎么常用。</em><br><img src="https://upload-images.jianshu.io/upload_images/5415189-e992e43a4809b1f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="三元运算符"></p>
+<h2 id="3-函数"><a href="#3-函数" class="headerlink" title="3.函数"></a>3.函数</h2><p>JavaScript里函数使用function()关键字。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-6341165c0dbe9c38.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="函数"></p>
+<h4 id="3-1-返回与日志（输出与返回）"><a href="#3-1-返回与日志（输出与返回）" class="headerlink" title="3.1 返回与日志（输出与返回）"></a>3.1 返回与日志（输出与返回）</h4><p><img src="https://upload-images.jianshu.io/upload_images/5415189-a5381bb23b172984.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="console.log()"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-98d4425e4b7da977.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="undefined"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-8d4fa2a5be50297a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="输出与返回"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-273a4a9a5db09305.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="输出与返回"></p>
+<h4 id="3-2-作用域"><a href="#3-2-作用域" class="headerlink" title="3.2 作用域"></a>3.2 作用域</h4><p><img src="https://upload-images.jianshu.io/upload_images/5415189-b17a6a196c0a981b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="引用传递"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-69f0d611393edd8c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="值传递"></p>
+<h4 id="3-3-提升"><a href="#3-3-提升" class="headerlink" title="3.3 提升"></a>3.3 提升</h4><p>1.JavaScript 会将函数声明和变量声明提升到当前作用域的顶部。</p>
+<p>2.变量赋值不会提升。</p>
+<p>3.在脚本的顶部声明函数和变量，这样语法和行为就会相互保持一致。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-1ad1f9629d81e67a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="提升"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-75d02f9456f49d1a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="提升导致的错误（1）"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-d8fb279d96d7d789.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="提升导致的错误（2）"></p>
+<h5 id="3-4-函数表达式"><a href="#3-4-函数表达式" class="headerlink" title="3.4 函数表达式"></a>3.4 函数表达式</h5><p>匿名函数，有点类似lambda表达式。可以把函数储存在变量中。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-6a616ec51720c244.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="函数表达式"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-64fce095fe26aed8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="匿名函数表达式"></p>
+<p>所有函数声明提升和加载后，脚本才会实际地运行。函数表达式不会提升，因为它们涉及变量赋值，只有变量声明会提升。在解析器在脚本中到达该表达式之前，函数表达式不会加载。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-d1af1d1248a355f4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="函数对比"></p>
+<h5 id="3-4-1-回调"><a href="#3-4-1-回调" class="headerlink" title="3.4.1 回调"></a>3.4.1 回调</h5><p><img src="https://upload-images.jianshu.io/upload_images/5415189-3b8a8c607746b420.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="回调"></p>
+<h5 id="3-4-2-有名称的函数表达式"><a href="#3-4-2-有名称的函数表达式" class="headerlink" title="3.4.2 有名称的函数表达式"></a>3.4.2 有名称的函数表达式</h5><p><img src="https://upload-images.jianshu.io/upload_images/5415189-7b6db2972cdb1976.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="有名称的函数表达式"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-b83da5d47316d838.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="命名函数表达式"></p>
+<h5 id="3-4-3-内嵌函数表达式"><a href="#3-4-3-内嵌函数表达式" class="headerlink" title="3.4.3 内嵌函数表达式"></a>3.4.3 内嵌函数表达式</h5><p>这种内嵌函数表达式，在python中称之为把函数视为一等对象。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-f254df1e3b75db1d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="内嵌函数表达式"><br>函数表达式，将函数内嵌传递给其他函数的语法在 JavaScript 中很常见</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-fb6c2319a36f287d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="内嵌函数表达式"></p>
+<h2 id="4-array"><a href="#4-array" class="headerlink" title="4.array"></a>4.array</h2><p>JavaScript的array感觉更像是python的list，用了这么久，感觉都是一样的。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-8449e39168706b61.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="array"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-b1a30695bb8bb997.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="array method"></p>
+<h5 id="array-loop"><a href="#array-loop" class="headerlink" title="array loop"></a>array loop</h5><p>传统的遍历array。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-6bd750c984ffcadd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>forEach()更像是一种迭代。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-a97dd0685ad1a86a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="forEach()"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-19bac43ac0cbe6b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="forEach()回调函数"></p>
+<p>map()返回一个新的array<br><img src="https://upload-images.jianshu.io/upload_images/5415189-8970f1519f4830f3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h2 id="5-对象"><a href="#5-对象" class="headerlink" title="5.对象"></a>5.对象</h2><p><img src="https://upload-images.jianshu.io/upload_images/5415189-235c22330df2c81b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<h5 id="5-1-typeof"><a href="#5-1-typeof" class="headerlink" title="5.1 typeof"></a>5.1 typeof</h5><p>既然是自动判断类型的语言，就必然要有用来判断变量类型的函数。在python里是type()，在JavaScript里是typeof()。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-94f75fa83d1b3c36.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="typeof"></p>
+<h5 id="5-2-创建对象"><a href="#5-2-创建对象" class="headerlink" title="5.2 创建对象"></a>5.2 创建对象</h5><p>第一次看到这个时候感觉想c语言的结构体，但是后来想了想，感觉Javascript的对象更像散列函数。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-4c633c057a013776.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="创建对象"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-c0b3f8678df0bc5f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-bad14ec650686f9d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="命名规则"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-79c72273a461e43f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="创建 JavaScript 对象实例"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-1df78b9950319a33.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="把属性添加到 JavaScript 对象"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-ea214f6084b8107c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="把方法添加到 JavaScript 对象"></p>
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p><img src="https://upload-images.jianshu.io/upload_images/5415189-1a931cb51bce4f24.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="结束语"></p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    تبرّع
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="John Doe WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="John Doe Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>مؤلف المقال:  </strong>John Doe
+  </li>
+  <li class="post-copyright-link">
+    <strong>رابط المقال: </strong>
+    <a href="http://yoursite.com/2018/08/04/%E5%88%B7%E5%AE%8Cudacity%E7%9A%84JavaScript%EF%BC%8C%E6%88%91%E6%83%B3%E8%AF%B4%E2%80%A6%E2%80%A6/" title="刷完udacity的JavaScript，我想说……">http://yoursite.com/2018/08/04/刷完udacity的JavaScript，我想说……/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>حقوق الملكية:  </strong>حميع المقالات في هذه المدوّنة منشورة تحت رخصة <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> إلا عند التنويه بخلافه.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%20--%20%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D/" rel="prev" title="机器学习入门 常用算法介绍">
+      <i class="fa fa-chevron-left"></i> 机器学习入门 常用算法介绍
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/08/30/jupyter%20notebook%E6%94%AF%E6%8C%81matlab%E8%AF%AD%E6%B3%95/" rel="next" title="jupyter notebook支持matlab语法">
+      jupyter notebook支持matlab语法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-数据类型"><span class="nav-number">1.</span> <span class="nav-text">1. 数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-字符串拼接"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1.2 字符串拼接</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-绝对相等"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">1.3 绝对相等</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-真假值"><span class="nav-number">2.</span> <span class="nav-text">2.真假值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-函数"><span class="nav-number">3.</span> <span class="nav-text">3.函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-返回与日志（输出与返回）"><span class="nav-number">3.0.1.</span> <span class="nav-text">3.1 返回与日志（输出与返回）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-作用域"><span class="nav-number">3.0.2.</span> <span class="nav-text">3.2 作用域</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-提升"><span class="nav-number">3.0.3.</span> <span class="nav-text">3.3 提升</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-4-函数表达式"><span class="nav-number">3.0.3.1.</span> <span class="nav-text">3.4 函数表达式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-4-1-回调"><span class="nav-number">3.0.3.2.</span> <span class="nav-text">3.4.1 回调</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-4-2-有名称的函数表达式"><span class="nav-number">3.0.3.3.</span> <span class="nav-text">3.4.2 有名称的函数表达式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-4-3-内嵌函数表达式"><span class="nav-number">3.0.3.4.</span> <span class="nav-text">3.4.3 内嵌函数表达式</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-array"><span class="nav-number">4.</span> <span class="nav-text">4.array</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#array-loop"><span class="nav-number">4.0.0.1.</span> <span class="nav-text">array loop</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-对象"><span class="nav-number">5.</span> <span class="nav-text">5.对象</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#5-1-typeof"><span class="nav-number">5.0.0.1.</span> <span class="nav-text">5.1 typeof</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-2-创建对象"><span class="nav-number">5.0.0.2.</span> <span class="nav-text">5.2 创建对象</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结束"><span class="nav-number">6.</span> <span class="nav-text">结束</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="John Doe"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">التصنيفات</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">الوسوم</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/national97" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;national97" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:deep.work.max@gmail.com" title="E-Mail → mailto:deep.work.max@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://qiuyiwu.github.io/" title="https:&#x2F;&#x2F;qiuyiwu.github.io" rel="noopener" target="_blank">Qiuyi Wu</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tutulifestyle.com/" title="https:&#x2F;&#x2F;tutulifestyle.com" rel="noopener" target="_blank">TuTu生活志</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://octopuslian.github.io/" title="https:&#x2F;&#x2F;octopuslian.github.io" rel="noopener" target="_blank">不会飞的章鱼</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://6nexr1.coding-pages.com/" title="http:&#x2F;&#x2F;6nexr1.coding-pages.com" rel="noopener" target="_blank">查令十字街</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://sobooks.cc/" title="https:&#x2F;&#x2F;sobooks.cc" rel="noopener" target="_blank">sobook</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="http://www.beian.miit.gov.cn/" rel="noopener" target="_blank">辽ICP备20003791号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 1997 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">مُجمل عدد الحروف: </span>
+    <span title="مُجمل عدد الحروف">16k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">مُجمل زمن القراءة &asymp;</span>
+    <span title="مُجمل زمن القراءة">14 دقائق.</span>
+</div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="إجمالي الزوار">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="إجمالي المشاهدات">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'b01f304765e88cefacda',
+      clientSecret: 'b0fab1207d6fd0017560aaa70547f4f4c8c07a2d',
+      repo        : 'hexocomment',
+      owner       : 'NATIONAL97',
+      admin       : ['NATIONAL97'],
+      id          : '09c92548864dca8dd49ccc62f9863651',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
