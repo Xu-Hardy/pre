@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Linux 脚本开机启动</title>
+    <url>/2020/05/04/Linux-%E8%84%9A%E6%9C%AC%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/</url>
+    <content><![CDATA[<p>有时候会有一些脚本需要再Linux开机的时候自动启动，尤其是嵌入式Linux自己写的批处shell理脚本，举个例子，假如我想开机启动jupyter notebook</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">jupyter.sh</span></span><br><span class="line">start() &#123;</span><br><span class="line"></span><br><span class="line">nohup jupyter notebook --ip=0.0.0.0 --port=8888 &gt; jupyter.log 2&gt;&amp;1 &amp;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">start</span><br></pre></td></tr></table></figure>
+
+<p>vim新建好的脚本是没有执行权限的，首先要把脚本改成755权限</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod +x jupyter.sh</span><br></pre></td></tr></table></figure>
+
+<p>然后再把jupyter.sh移动到/etc/init.d/下，这里有很多开机自启动动的服务，比如ssh</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo cp jupyter.sh /etc/init.d/</span><br></pre></td></tr></table></figure>
+
+<p>然后允许开机自启动</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/etc/init.d/jupyter.sh enable</span><br></pre></td></tr></table></figure>
+
+<p>最后我们再/etc/rc.local中加入如下一行：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/etc/init.d/jupyter.sh start</span><br></pre></td></tr></table></figure>
+
+<p>这样我们的脚本就可以再开机时候随着系统启动了</p>
+<p>6a958f794f3086ac232f34e0a5f1e20b10654015</p>
+]]></content>
+      <categories>
+        <category>零零碎碎的技术玩意</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>VS code+linux子系统打造开发环境</title>
+    <url>/2019/02/14/VS%20code+linux%E5%AD%90%E7%B3%BB%E7%BB%9F%E6%89%93%E9%80%A0%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</url>
+    <content><![CDATA[<h3 id="1-下载子系统"><a href="#1-下载子系统" class="headerlink" title="1.下载子系统"></a>1.下载子系统</h3><p><img src="https://upload-images.jianshu.io/upload_images/5415189-406b132777749578.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-759da722a6f05673.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h3 id="2-安装必要软件"><a href="#2-安装必要软件" class="headerlink" title="2.安装必要软件"></a>2.安装必要软件</h3><p>0.<a href="https://www.linuxidc.com/Linux/2017-11/148627.htm" target="_blank" rel="noopener">更换软件源</a><br><a href="https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/</a><br>1.安装build-essential</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo apt-get install build-essential</span><br></pre></td></tr></table></figure>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-78cca69c80437e10.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>安装完之后发现gcc和g++都是5.4版本的，需要进行更新。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-077bb0fbf917c7cf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>2.升级gcc, g++<br>首先添加ppa到库</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo add-apt-repository ppa:ubuntu-toolchain-r&#x2F;test</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install g++-8</span><br></pre></td></tr></table></figure>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-67806fc2235cede0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>接下来使用管理员权限更新一下。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">update-alternatives --install &#x2F;usr&#x2F;bin&#x2F;gcc gcc &#x2F;usr&#x2F;bin&#x2F;gcc-8 53 \</span><br><span class="line">--slave &#x2F;usr&#x2F;bin&#x2F;g++ g++ &#x2F;usr&#x2F;bin&#x2F;g++-8 \</span><br><span class="line">--slave &#x2F;usr&#x2F;bin&#x2F;gcc-ar gcc-ar &#x2F;usr&#x2F;bin&#x2F;gcc-ar-8 \</span><br><span class="line">--slave &#x2F;usr&#x2F;bin&#x2F;gcc-nm gcc-nm &#x2F;usr&#x2F;bin&#x2F;gcc-nm-8 \</span><br><span class="line">--slave &#x2F;usr&#x2F;bin&#x2F;gcc-ranlib gcc-ranlib &#x2F;usr&#x2F;bin&#x2F;gcc-ranlib-8</span><br></pre></td></tr></table></figure>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-42a28db55856a4fc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>3.安装anaconda </p>
+<p><a href="https://www.anaconda.com/distribution/" target="_blank" rel="noopener">官网</a>或者<a href="https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/" target="_blank" rel="noopener">清华镜像</a>下载anaconda</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-e77fc35b6452e09e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>配置环境变量</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">echo &#39;export PATH&#x3D;&quot;~&#x2F;anaconda3&#x2F;bin:$PATH&quot;&#39; &gt;&gt; ~&#x2F;.bashrc</span><br><span class="line">source ~&#x2F;.bashrc</span><br></pre></td></tr></table></figure>
+<p>安装成功<br><img src="https://upload-images.jianshu.io/upload_images/5415189-bb6f3572fdf47e9f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><img src="https://upload-images.jianshu.io/upload_images/5415189-824afee4b835411e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><a href="https://www.jianshu.com/p/fe327b72fa31" target="_blank" rel="noopener">https://www.jianshu.com/p/fe327b72fa31</a></p>
+]]></content>
+      <categories>
+        <category>零零碎碎的技术玩意</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>java内部类</title>
+    <url>/2019/06/22/java%E5%86%85%E9%83%A8%E7%B1%BB/</url>
+    <content><![CDATA[<p>java的内部类和python和js的闭包有些类似，实际上就是在一个类的内部定义另外一个类，既然类了可以有字段，方法，那么为什么不可以定义一个类了，用c写过链表的读者可以发现在结构体里面还定义了结构体变量。下边举个例子：</p>
+<h6 id="1-默认访问控制的内部类（public）"><a href="#1-默认访问控制的内部类（public）" class="headerlink" title="1.默认访问控制的内部类（public）"></a>1.默认访问控制的内部类（public）</h6><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Outclass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Innerclass</span>  </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> x = <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Outclass o = <span class="keyword">new</span> Outclass();</span><br><span class="line">        Outclass.Innerclass i = o.<span class="keyword">new</span> Innerclass();</span><br><span class="line">        System.out.println(o.x);</span><br><span class="line">        System.out.println(i.x);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，这里办法需要先对外边的类进行实例化，才可以用内部类创建对象。<br>那么是不是有什么呢简单的方法呢？<br>当然有！！！<br>我们需要加入一些访问控制，比如我们要用类名来调用字段和方法的时候通常在前面加static修饰，这里也不例外，下边我们看一下：</p>
+<h5 id="2-静态内部类"><a href="#2-静态内部类" class="headerlink" title="2.静态内部类"></a>2.静态内部类</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Outclass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Innerclass</span>  </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> x = <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Outclass.Innerclass i = <span class="keyword">new</span> Outclass.Innerclass();</span><br><span class="line">        System.out.println(i.x);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里就可以在不创建外部类的基础上直接实例化内部类了。</p>
+<h5 id="3-访问控制（private，-protected）"><a href="#3-访问控制（private，-protected）" class="headerlink" title="3.访问控制（private， protected）"></a>3.访问控制（private， protected）</h5><p>当然内部类也同样支持private， protected这两种修饰</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Outclass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Innerclass</span>  </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> x = <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Outclass o = <span class="keyword">new</span> Outclass();</span><br><span class="line">        Outclass.Innerclass i = o.<span class="keyword">new</span> Innerclass();</span><br><span class="line">        System.out.println(o.x);</span><br><span class="line">        System.out.println(i.x);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>和之前类似的这段代码是跑不通的，因为尝试在主函数里访问内部类了。<br>IDEA报错如下：<br><img src="https://img-blog.csdnimg.cn/20190622232139182.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zODc4MTQ5OA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5 id="4-在内部类里访问外部类字段和方法"><a href="#4-在内部类里访问外部类字段和方法" class="headerlink" title="4.在内部类里访问外部类字段和方法"></a>4.在内部类里访问外部类字段和方法</h5><p>这个是内部类的一个优点，一个在内部类里访问外部类的字段和方法。但是直接用实例化的内部类对象调用会报错。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Outclass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">printOut</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"外部类"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="class"><span class="keyword">class</span> <span class="title">Innerclass</span>  </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">innerMethod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span>  x;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">printInner</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            printOut();</span><br><span class="line">            System.out.println(<span class="string">"访问内部类"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Outclass o = <span class="keyword">new</span> Outclass();</span><br><span class="line">        Outclass.Innerclass i = o.<span class="keyword">new</span> Innerclass();</span><br><span class="line">        System.out.println(i.innerMethod());</span><br><span class="line">        i.printInner();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果如下<br><img src="https://img-blog.csdnimg.cn/20190622233100198.png" alt=""></p>
+<p><a href="https://www.w3schools.com/java/java_inner_classes.asp" target="_blank" rel="noopener">参考w3schools.com</a></p>
+]]></content>
+      <categories>
+        <category>Java语言程序设计</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>jupyter notebook支持matlab语法</title>
+    <url>/2018/08/30/jupyter%20notebook%E6%94%AF%E6%8C%81matlab%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<p>1.安装matlab的python拓展</p>
+<p>进入安装matlab的文件夹，如下路径<br><img src="https://upload-images.jianshu.io/upload_images/5415189-01b0cb94189c06d4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>执行py代码，</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
+<p>这样就算完成了py的拓展。</p>
+<p>2.在jupyter装 matlab kernel</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">pip install matlab_kernel</span><br></pre></td></tr></table></figure>
+
+<p>使用jupyter即可。</p>
+<p>我的matlab版本是2018a, python 3.6.5。用的最新的anaconda。<br>参考链接：</p>
+<p><a href="https://github.com/Calysto/matlab_kernel" target="_blank" rel="noopener">https://github.com/Calysto/matlab_kernel</a></p>
+<p><a href="https://www.zhihu.com/question/65744778" target="_blank" rel="noopener">https://www.zhihu.com/question/65744778</a></p>
+]]></content>
+      <categories>
+        <category>零零碎碎的技术玩意</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>Jupyter notebook</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>python胶水语言特性，连接java和c++</title>
+    <url>/2019/02/21/python%E8%83%B6%E6%B0%B4%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7%EF%BC%8C%E8%BF%9E%E6%8E%A5java%E5%92%8Cc/</url>
+    <content><![CDATA[<h3 id="python是有名的胶水语言-今天打算试下它的胶水特性。"><a href="#python是有名的胶水语言-今天打算试下它的胶水特性。" class="headerlink" title="python是有名的胶水语言,今天打算试下它的胶水特性。"></a>python是有名的胶水语言,今天打算试下它的胶水特性。</h3><p>（环境Ubuntu16.04,win10因为gcc的原因不知道为什么一直报错）</p>
+<hr>
+<p>1.首先先说Java的部分，在Python中启动JVM就要调用jpype，直接pip安装就好了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">pip install jpype1</span><br></pre></td></tr></table></figure>
+<p>然后import jpype，就可以在Python里面写Java代码。</p>
+<hr>
+<p>2.c++部分</p>
+<p>c++部分还是要依靠g++，利用gcc原本的功能把cpp文件编译成为so文件，然后在Python中直接调用。</p>
+<pre><code>//c++代码
+#include &lt;iostream&gt;
+using namespace std;
+
+class TestLib
+{
+    public:
+        int display();
+        void display(int a);
+        void add(int a);
+};
+int TestLib::display() {
+    cout&lt;&lt;&quot;First display&quot;&lt;&lt;endl;
+    return 1;
+}
+
+void TestLib::display(int a) {
+    cout&lt;&lt;&quot;Second display:&quot;&lt;&lt;a&lt;&lt;endl;
+}
+
+void TestLib::add(int a) {
+        cout&lt;&lt;a&lt;&lt;endl;    
+    }
+
+extern &quot;C&quot; {
+    TestLib obj;
+    int display() {
+        obj.display();
+      }
+    void display_int() {
+        obj.display(2);
+      }
+
+    void add_re() {
+        obj.add(1);    
+    }
+
+}</code></pre><p>编译命令：</p>
+<pre><code>g++ -o s.so -shared -fPIC s.cpp</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">from jpype import *</span><br><span class="line">startJVM(getDefaultJVMPath(), &quot;-ea&quot;)</span><br><span class="line">a &#x3D; java.lang.System.out.println(&quot;Hello World&quot;)</span><br><span class="line">shutdownJVM()</span><br><span class="line"></span><br><span class="line">import ctypes</span><br><span class="line">so &#x3D; ctypes.cdll.LoadLibrary</span><br><span class="line">lib &#x3D; so(&quot;.&#x2F;s.so&quot;)</span><br><span class="line">print(&#39;display()&#39;)</span><br><span class="line">b &#x3D; lib.display()</span><br><span class="line">print(&#39;display(100)&#39;)</span><br><span class="line">lib.display_int(100)</span><br><span class="line">lib.add_re()</span><br><span class="line">c &#x3D; lib.add_re()</span><br><span class="line">print(b)</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>零零碎碎的技术玩意</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>Java</tag>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>test latex</title>
+    <url>/2019/07/14/latex/</url>
+    <content><![CDATA[<h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1><h3 id="三级标题"><a href="#三级标题" class="headerlink" title="三级标题"></a>三级标题</h3><p>Simple inline $a = b + c$.</p>
+<p>$$\begin{array}{c|lcr}<br>n &amp; \text{Left} &amp; \text{Center} &amp; \text{Right} \\<br>\hline<br>1 &amp; 1.97 &amp; 5 &amp; 12 \\<br>2 &amp; -11 &amp; 19 &amp; -80 \\<br>3 &amp; 70 &amp; 209 &amp; 1+i \\<br>\end{array}$$ </p>
+]]></content>
+  </entry>
+  <entry>
+    <title>python导出环境配置文件</title>
+    <url>/2019/06/28/python%E5%AF%BC%E5%87%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<p>由于某些原因我们要做python环境的迁移，下边看一下环境的导入和导出。比如自己做的项目，在reviwer的时候需要告诉别人自己的各种库的版本。</p>
+<blockquote>
+<p>环境导出</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">pip freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>环境导入</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这样子别人就可以拿我们的环境配置来直接用了。</p>
+]]></content>
+      <categories>
+        <category>零零碎碎的技术玩意</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>佛•教化•屠杀</title>
+    <url>/2017/11/05/%E4%BD%9B%E2%80%A2%E6%95%99%E5%8C%96%E2%80%A2%E5%B1%A0%E6%9D%80/</url>
+    <content><![CDATA[<p>东鸡冠山迷了路，误闯了田间的坟地。</p>
+<p>以至于到了日俄监狱，那份恐惧仍旧没有消失。高高厚厚的城墙，勾起了几年前途经伪皇宫的回忆，如果说高城壁垒是为了防止犯人逃窜，那么皇宫岂不是帝王将相的牢狱？这样想着，愿生生世世莫生于帝王之家倒是一种悲哀的绝唱了。</p>
+<p>事实上，穿过城墙，里面并没有想象中的庄严，本以为这里的冤气会压迫灵魂，让人窒息，事实上是，一路惊魂未定，却连一丝血腥气都未曾嗅到过。</p>
+<p>监狱明显翻新过，若是复古风格，经历过枪林弹雨的山石和被抓破了的淋满殷红的墙壁才与它相称。角落里卧着的一口大钟倒是引人注意，介绍上说，这是日本帝国主义卑劣行径的体现，过去每天都有僧人到这里来超度，借以来消磨人们的反抗意志。看到这里我无意为日本开脱，若是余生充满痛苦，透过佛法来看世界倒是一个不错的选择。佛教从古印度传到中国，日本，最后成为世界三大宗教之一，自然是可以为大众消灾解祸的。这里仅仅表明立场，不做任何评价。</p>
+<p>不过倒是想起了关于安倍的一则新闻，安倍夫妇通过初等教育渗透“爱国主义思想”，那么这些东西就像一种信仰，正在这些孩子们大脑中根深蒂固，那么与宗教，还有我们从小被培养的抗日情怀，其实都是同样一种意识形态。</p>
+<p>整个监狱不大，猜测犯人不足一千，里面有很多过去工厂的牌坊，现在一些关闭，一些则摆放一些遗物供人们参观。大概以前犯人们就都在这里劳作。还有医务室，对于重症的病人，当然安安静静的等待他们死去。因为在这里最便宜的就是人命，人命是换取劳动果实的易耗品，当然也是供这里的人取乐的工具。把犯人双眼用黑布蒙上，让其跪在地板上，然后把脖子套进绳索，再把木板抽走，人就掉在了几米之下的木桶里，然后被几个同伴默默地抬起奔赴坟场，狱卒在后面举着短枪，准备随时扣下扳机。</p>
+<p>复原图倒是有几具骷髅，混着朽木和尘土。当然我十年前在黑龙江省博物馆便见过真实的骨架，除了不理解为什么手心那里是凹下去的，其余并没有什么意外。小时候也埋葬过燕子，所以对骨头并不怎么畏惧，也不觉得好端端的一个人忽然变成一堆白骨有什么奇怪的地方。那个年代，人命真的是不值钱的，有些人终其一生不过吃了几颗枪子而已。</p>
+<p>那么与那时相比，我们是否更加幸运？当然是否定的。那时的冲突是意识形态，现在则是文化断层。我们是否要缅怀先烈？那也不必，这种历史不会再重演。若是生在战争年代，那么终生梦想便是世界和平，人生安稳。现在一定与那时不一样。有人说历史一共分为三种：第一种是已经逝去的岁月，往事不可追忆；第二种写在了各类史诗典籍中，可能迫于当时时局，略加修改；那么第三种便是自己阅读各类典籍，加上自己的心得体会，认为历史应当是这个样子。那么历史是不必躺在水晶棺中任人观赏的了。与华丽相比，应该更接近于真实。</p>
+<p>那么现在中日关系如何？我们作为小人物当然不想太清楚。国际上有一条交友准则，没有永恒的朋友，只有永恒的利益。从旅顺回到大连，写下了这样的话：</p>
+<p>旅大是日本的情妇，被百般虐待，所有的灵感都来源与她，荣誉则是成为一份作品，而毁灭也恰好是她。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/5415189-9efec6d23442ac8d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1080/q/50" alt="图片发自简书App"></p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>City</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>刷完udacity的JavaScript，我想说……</title>
+    <url>/2018/08/04/%E5%88%B7%E5%AE%8Cudacity%E7%9A%84JavaScript%EF%BC%8C%E6%88%91%E6%83%B3%E8%AF%B4%E2%80%A6%E2%80%A6/</url>
+    <content><![CDATA[<p><img src="https://upload-images.jianshu.io/upload_images/5415189-90d2970b0c09108e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="前言"></p>
+<p>刷完了udacity上JS的入门课，纯粹为了学习开发小程序而补的前端知识。</p>
+<p>一开始在SoloLearn上最先接触的JS，只用了三个小时不到就把证书刷下来了，这毕竟是我在SoloLearn的第一个证书，先炫一下哈！</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-57405a5d2fc54e65.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="SoloLearn证书"></p>
+<p>进入正题，JavaScript起初为了出名特地把名字取得和Java很像，因为Java一直都很火，Java web, 移动开发，服务器。当然如果学过java在去学JS得话，就会感觉者这门语言非常得友好，沿袭了Java的大部分风格，这里就说几点不同吧。</p>
+<h2 id="1-数据类型"><a href="#1-数据类型" class="headerlink" title="1. 数据类型"></a>1. 数据类型</h2><p>#####1.1自动判断类型。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-1206601061b03fb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="JavaScript的数据类型"><br>在传统的语言里，要定义变量，都要是使用int ，float , double ,boolean这些关键字，但是在JS里完全不用。直接使用var关键字，变量的数据类型完全由系统自动判断。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#java8,c,c++都要这么写</span><br><span class="line"></span><br><span class="line">int age&#x3D; 25;</span><br><span class="line">float pi &#x3D; 3.14;</span><br><span class="line"></span><br><span class="line">#听说Java9也使用var 自动判断，不过，本人还是坚守Java8.</span><br></pre></td></tr></table></figure>
+
+<p>而在JS里就可以这么写：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var name &#x3D; &#39;javascript&#39;;</span><br><span class="line">var age &#x3D; 25;</span><br><span class="line">var pi &#x3D; 3.14;</span><br><span class="line">var message &#x3D; [&#39;hello&#39;, &#39;nihao&#39;];</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;注：JavaScript里single quote 和 double quote 没有区别，本人更加倾向single quote,JS好多地方和python很像。</span><br></pre></td></tr></table></figure>
+
+<h5 id="1-2-字符串拼接"><a href="#1-2-字符串拼接" class="headerlink" title="1.2 字符串拼接"></a>1.2 字符串拼接</h5><p>javaScript的字符串自动拼接，可以在这里把number直接转成字符串。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-ca17f5a347d43654.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="字符串自动拼接"></p>
+<p><strong>注：console.log()是输出日志，相当于Java的System.out.print()。</strong></p>
+<hr>
+<h5 id="1-3-绝对相等"><a href="#1-3-绝对相等" class="headerlink" title="1.3 绝对相等"></a>1.3 绝对相等</h5><p>javascript使用了自动判断类型，所以使用===表示数值和数据类型都相等，而==仅仅表示数值相等。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-83b9b2a9a9dfa14d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="JavaScript绝对相等"></p>
+<hr>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-cf3c8dc3bc6a79ba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="实际测试"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-3a4bd6f0dce5df63.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="比较运算符"></p>
+<h2 id="2-真假值"><a href="#2-真假值" class="headerlink" title="2.真假值"></a>2.真假值</h2><p>在JavaScript里，视为真值的有non-zero number, non-empty string, object, array, true。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-207e8750e8aaec98.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Truthy Values"></p>
+<p>在JavaScript里，视为假值的有null, undefined, 0, empty string,  NaN, fasle。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-3ee6b6c0b64f57d3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Fasly Values"></p>
+<p><em>三元运算符是从c语言一直沿袭下来的，Java也有。不过没怎么常用。</em><br><img src="https://upload-images.jianshu.io/upload_images/5415189-e992e43a4809b1f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="三元运算符"></p>
+<h2 id="3-函数"><a href="#3-函数" class="headerlink" title="3.函数"></a>3.函数</h2><p>JavaScript里函数使用function()关键字。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-6341165c0dbe9c38.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="函数"></p>
+<h4 id="3-1-返回与日志（输出与返回）"><a href="#3-1-返回与日志（输出与返回）" class="headerlink" title="3.1 返回与日志（输出与返回）"></a>3.1 返回与日志（输出与返回）</h4><p><img src="https://upload-images.jianshu.io/upload_images/5415189-a5381bb23b172984.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="console.log()"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-98d4425e4b7da977.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="undefined"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-8d4fa2a5be50297a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="输出与返回"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-273a4a9a5db09305.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="输出与返回"></p>
+<h4 id="3-2-作用域"><a href="#3-2-作用域" class="headerlink" title="3.2 作用域"></a>3.2 作用域</h4><p><img src="https://upload-images.jianshu.io/upload_images/5415189-b17a6a196c0a981b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="引用传递"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-69f0d611393edd8c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="值传递"></p>
+<h4 id="3-3-提升"><a href="#3-3-提升" class="headerlink" title="3.3 提升"></a>3.3 提升</h4><p>1.JavaScript 会将函数声明和变量声明提升到当前作用域的顶部。</p>
+<p>2.变量赋值不会提升。</p>
+<p>3.在脚本的顶部声明函数和变量，这样语法和行为就会相互保持一致。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-1ad1f9629d81e67a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="提升"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-75d02f9456f49d1a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="提升导致的错误（1）"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-d8fb279d96d7d789.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="提升导致的错误（2）"></p>
+<h5 id="3-4-函数表达式"><a href="#3-4-函数表达式" class="headerlink" title="3.4 函数表达式"></a>3.4 函数表达式</h5><p>匿名函数，有点类似lambda表达式。可以把函数储存在变量中。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-6a616ec51720c244.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="函数表达式"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-64fce095fe26aed8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="匿名函数表达式"></p>
+<p>所有函数声明提升和加载后，脚本才会实际地运行。函数表达式不会提升，因为它们涉及变量赋值，只有变量声明会提升。在解析器在脚本中到达该表达式之前，函数表达式不会加载。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-d1af1d1248a355f4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="函数对比"></p>
+<h5 id="3-4-1-回调"><a href="#3-4-1-回调" class="headerlink" title="3.4.1 回调"></a>3.4.1 回调</h5><p><img src="https://upload-images.jianshu.io/upload_images/5415189-3b8a8c607746b420.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="回调"></p>
+<h5 id="3-4-2-有名称的函数表达式"><a href="#3-4-2-有名称的函数表达式" class="headerlink" title="3.4.2 有名称的函数表达式"></a>3.4.2 有名称的函数表达式</h5><p><img src="https://upload-images.jianshu.io/upload_images/5415189-7b6db2972cdb1976.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="有名称的函数表达式"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-b83da5d47316d838.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="命名函数表达式"></p>
+<h5 id="3-4-3-内嵌函数表达式"><a href="#3-4-3-内嵌函数表达式" class="headerlink" title="3.4.3 内嵌函数表达式"></a>3.4.3 内嵌函数表达式</h5><p>这种内嵌函数表达式，在python中称之为把函数视为一等对象。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-f254df1e3b75db1d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="内嵌函数表达式"><br>函数表达式，将函数内嵌传递给其他函数的语法在 JavaScript 中很常见</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-fb6c2319a36f287d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="内嵌函数表达式"></p>
+<h2 id="4-array"><a href="#4-array" class="headerlink" title="4.array"></a>4.array</h2><p>JavaScript的array感觉更像是python的list，用了这么久，感觉都是一样的。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-8449e39168706b61.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="array"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-b1a30695bb8bb997.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="array method"></p>
+<h5 id="array-loop"><a href="#array-loop" class="headerlink" title="array loop"></a>array loop</h5><p>传统的遍历array。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-6bd750c984ffcadd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>forEach()更像是一种迭代。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-a97dd0685ad1a86a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="forEach()"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-19bac43ac0cbe6b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="forEach()回调函数"></p>
+<p>map()返回一个新的array<br><img src="https://upload-images.jianshu.io/upload_images/5415189-8970f1519f4830f3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h2 id="5-对象"><a href="#5-对象" class="headerlink" title="5.对象"></a>5.对象</h2><p><img src="https://upload-images.jianshu.io/upload_images/5415189-235c22330df2c81b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<h5 id="5-1-typeof"><a href="#5-1-typeof" class="headerlink" title="5.1 typeof"></a>5.1 typeof</h5><p>既然是自动判断类型的语言，就必然要有用来判断变量类型的函数。在python里是type()，在JavaScript里是typeof()。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-94f75fa83d1b3c36.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="typeof"></p>
+<h5 id="5-2-创建对象"><a href="#5-2-创建对象" class="headerlink" title="5.2 创建对象"></a>5.2 创建对象</h5><p>第一次看到这个时候感觉想c语言的结构体，但是后来想了想，感觉Javascript的对象更像散列函数。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-4c633c057a013776.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="创建对象"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-c0b3f8678df0bc5f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-bad14ec650686f9d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="命名规则"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-79c72273a461e43f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="创建 JavaScript 对象实例"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-1df78b9950319a33.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="把属性添加到 JavaScript 对象"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5415189-ea214f6084b8107c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="把方法添加到 JavaScript 对象"></p>
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p><img src="https://upload-images.jianshu.io/upload_images/5415189-1a931cb51bce4f24.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="结束语"></p>
+]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>javascript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何把windows打造成类linux</title>
+    <url>/2017/06/17/%E5%A6%82%E4%BD%95%E6%8A%8Awindows%E6%89%93%E9%80%A0%E6%88%90%E7%B1%BBlinux/</url>
+    <content><![CDATA[<p>如果你乐于写代码，又苦于windows的环境配置，同时又不想安装linux的双系统或者虚拟机，又或者你的电脑不是win10，没有linux的子系统。那么这篇文章就是为你准备的。因为大家都知道，在windows下开发超级麻烦，许多人因此抛弃了Windows转入linux的行业，但是由于现在微软占有了90%以上的市场，所以现在大多数软件都是EXE格式的，所以对大多数人来说，还是抛弃不了windows，那么文章会教你如何在winows下找到linux初学时的感觉。</p>
+<h2 id="1-集成开发环境，编译器和文本编辑器"><a href="#1-集成开发环境，编译器和文本编辑器" class="headerlink" title="1.   集成开发环境，编译器和文本编辑器"></a>1.   集成开发环境，编译器和文本编辑器</h2><p>我是大一开始接触c语言的，也与此同时接触了Ubuntu， 并且开始了terminal跑代码的生涯，还好当时电脑安装vc++6.0出了好多岔子，不要然我也不会尝试linux，vim,sublime,可能会在没有高亮的屏幕上写一辈子的代码。先介绍一点基础知识吧，因为好多新手都是从集成开发环境（IDE）开始接触编程的，因为有些IDE太过于庞大，对于新手来说也很不好上手，所以我打算从文本编辑器讲起，其实用MS office自带的word也可以编写程序，不过我这里介绍的是一款大家比较喜欢的sublime text，因为它的语法高亮，自动补全，界面美观等优点一直被大家所喜欢。所以强烈推荐大家使用。(请自行百度下载)</p>
+<p>因为windows没有默认安装c的编译器，而在linux下有gcc , 这个可以编译c，c++, object-c ,go，java等一系列的语言，万幸的是在windows下有个编译器叫MinGW，号称是win版的gcc ,去官网下载即可，点击右上角的下载然后安装就好了。</p>
+<p>#####先一路默认安装，然后安装下边四个插件，否则无法正常使用。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/5415189-862266d2e175a723.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>#####然后点击左上角的Installation,apply changes即可。</p>
+<p>接下来要把wingw添加到环境变量中去，把mingw目录下的bin  ，include ， lib 三个文件及直接添加到环境变量即可。（环境变量的添加自行百度）</p>
+<p>然后打开cmd ,win+r ,输入cmd，输入gcc -v,查看gcc 的版本 -v 就是version的意思。<br>出现如下图片说明安装成功。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/5415189-fc4ecda0c01ef42f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>关于gcc的使用我就不在这里多说了，因为下一步需要用sublime调用gcc .</p>
+<h2 id="2-关于sublime"><a href="#2-关于sublime" class="headerlink" title="2. 关于sublime"></a>2. 关于sublime</h2><p>说了sublime的若干好处，下面就开始使用吧。因为sublime默认了Python的配置，所以Ctrl+s保存，Ctrl+b编译即可。我强烈建议使用python入门，但是好多学校直接开c语言的课，而且对于零基础的同学，想在初学时候自己配好环境是非常困难的，所以我也希望有人看过这篇文档可以少走一些弯路。</p>
+<p>好，接下来用sublime调用gcc，按照下图操作：</p>
+<h4 id="点击new-build-system"><a href="#点击new-build-system" class="headerlink" title="点击new build system"></a>点击new build system</h4><p><img src="http://upload-images.jianshu.io/upload_images/5415189-864212e266fbea47.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>####把下面一段代码粘贴进去</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/5415189-60462fd60ffecec5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>####具体在这里：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; &#123;</span><br><span class="line">&quot;working_dir&quot;: &quot;$file_path&quot;,</span><br><span class="line">&quot;cmd&quot;: &quot;gcc -Wall \&quot;$file_name\&quot; -o \&quot;$file_base_name\&quot;&quot;,</span><br><span class="line">&quot;file_regex&quot;: &quot;^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$&quot;,</span><br><span class="line">&quot;selector&quot;: &quot;source.c&quot;,</span><br><span class="line">&quot;variants&quot;:</span><br><span class="line">[</span><br><span class="line">&#123;</span><br><span class="line">&quot;name&quot;: &quot;Run&quot;,</span><br><span class="line">        	&quot;shell_cmd&quot;: &quot;gcc -Wall \&quot;$file\&quot; -o \&quot;$file_base_name\&quot; &amp;&amp; start cmd &#x2F;c \&quot;$&#123;file_path&#125;&#x2F;$&#123;file_base_name&#125; &amp; pause\&quot;&quot;</span><br><span class="line">&#125;</span><br><span class="line">]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####Ctr+保存名称为c即可（实际上全名是c.sublime-build）</p>
+<p>接下来你打开tool-build system，你会发现这个多出了一个c的选项。如果只使用sublime写c语言的话，点击c就可以了，如果想用它写不同的语言，那么还要配置一下：<br>点击右下角的从c,你的电脑可能是别的字母，因为sublime默认把c当做c++文件<br>，所以要把右下角的改成c。<br><img src="http://upload-images.jianshu.io/upload_images/5415189-05798e49250598da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>然后回到tool-bulid  system，改成Atuomatic就行了，之后sublime就会把你的c文件默认gcc编译了。</p>
+<p>对于喜欢终端的朋友，这里还可以在编译之后调用cmd，选择tool- bulid<br>with ，然后会弹出如下的窗口，选择c-run 即可。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/5415189-c31b9897358e8637.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>随便写一段c的代码，保存（Ctrl+s），编译(ctrl+b),你会发现cmd输出了你想要的结果。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/5415189-139bb011772fa949.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>至此，sublime调用gcc编译c语言完毕。</p>
+<h2 id="3-右键直接打开cmd"><a href="#3-右键直接打开cmd" class="headerlink" title="3. 右键直接打开cmd"></a>3. 右键直接打开cmd</h2><p>大家有没有想过window也同linux一样直接在当前目录打开终端呢？不必win+r cmd在加上各种cd ，只需要在注册表添加一段代码即可解决。</p>
+<hr>
+<p>Windows Registry Editor Version 5.00  </p>
+<p>; Created by: Shawn Brink  </p>
+<p>; <a href="http://www.sevenforums.com" target="_blank" rel="noopener">http://www.sevenforums.com</a>  </p>
+<p>; Tutorial: <a href="http://www.sevenforums.com/tutorials/47415-open-command-window-here-administrator.html" target="_blank" rel="noopener">http://www.sevenforums.com/tutorials/47415-open-command-window-here-administrator.html</a>  </p>
+<p>[-HKEY_CLASSES_ROOT\Directory\shell\runas]  </p>
+<p>[HKEY_CLASSES_ROOT\Directory\shell\runas]  </p>
+<p>@=”Open cmd here as Admin”  </p>
+<p>“HasLUAShield”=””  </p>
+<p>[HKEY_CLASSES_ROOT\Directory\shell\runas\command]  </p>
+<p>@=”cmd.exe /s /k pushd &quot;%V&quot;“  </p>
+<p>[-HKEY_CLASSES_ROOT\Directory\Background\shell\runas]  </p>
+<p>[HKEY_CLASSES_ROOT\Directory\Background\shell\runas]  </p>
+<p>@=”Open cmd here as Admin”  </p>
+<p>“HasLUAShield”=””  </p>
+<p>[HKEY_CLASSES_ROOT\Directory\Background\shell\runas\command]  </p>
+<p>@=”cmd.exe /s /k pushd &quot;%V&quot;“  </p>
+<p>[-HKEY_CLASSES_ROOT\Drive\shell\runas]  </p>
+<p>[HKEY_CLASSES_ROOT\Drive\shell\runas]  </p>
+<p>@=”Open cmd here as Admin”  </p>
+<p>“HasLUAShield”=””  </p>
+<p>[HKEY_CLASSES_ROOT\Drive\shell\runas\command]  </p>
+<p>@=”cmd.exe /s /k pushd &quot;%V&quot;“  </p>
+<hr>
+<p>把上边的代码保存到文档里，再把后缀改成reg就可以了，改完之后就是注册表的格式了，不要在乎期间的各种警告。</p>
+<p>导入之后，你会发现右键桌面会有一个“open cmd here as admin ” 的选项。这样就可以在任意目录打开cmd了。</p>
+<p>####写下最后</p>
+<p>本人大一，在学习c语言的时候走了各种弯路，所以才不断尝试，不断折腾。</p>
+<p>如果觉得上边的教程有些难的话，那么我推荐 Dev-cpp  这个也是很好的IDE，最起码在初学足够了，以后还会用到 visual studio。还是那句话，强烈推荐Python入门。</p>
+]]></content>
+      <categories>
+        <category>零零碎碎的技术玩意</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>房间</title>
+    <url>/2018/02/06/%E6%88%BF%E9%97%B4/</url>
+    <content><![CDATA[<p>他还是饶有兴味的看着戏剧。对他来说没有什么比戏剧更能打发这个黄昏了。他在想他的妻子在他身边该有多好。前一天他们吵了一架，她一气之下离家出走就再也没有回来。现在他只能在这个没有几个观众的看台下，痴痴地望着台上，当然心里想的还是他的结发妻。只不过他的戏剧能让他感觉稍微好些。</p>
+<p>“先生，麻烦你跟我们走一趟”两个警察模样的人出现在他面前，冷冰冰的声音划破了这一沉寂。我们这位好好先生可是从来不问缘由的，更何况他觉得自己也没犯什错。甚至于老婆吵架时，他都是默默的承受着家庭暴力。</p>
+<p>这次的目的地不是警察局，竟然是他的家里。屋中仿佛听见一男一女在吵架，女的似乎在咆哮：“看你昨天带回来的那个小男孩，再这么养下去我们都要穷死了！”男的成熟稳重，但也极富心机，他似乎都看不到那人的脸。那人说的每一句话都好似千斤：“我自有安排。”那个女人的声音听起来好像他的妻子，不过凭着他对她的相信，这一荒唐的想法很快就被否定了，哪怕他们只是新婚。就算新婚之夜他们刚刚吵了一架，他们也相信彼此都知道，两个人的完美主义还要慢慢磨合。世界上绝对没有任何人可以替代彼此的位置。本想等她气消了之后再和他一起游山玩水的。结果他发现现在像重物一样被人摔在地上，然后被拖进了一间黑屋子里。</p>
+<p>清醒了一会，他发现这个屋子的布局竟然和他家一模一样，而且他也告诉自己，仅仅是相似而已。这个黑屋子很像是他的卧室，只不过没有了灯，整个屋子就好一间暗房。他瞪大眼睛似乎不敢相信这是真的。难道是谁要向他复仇吗？怎么选择了个这么相像的地方。他是个好好先生，但是也得罪过不少人。慢慢的，他发现这个屋子里还有其他人。角落里蹲着一个小男孩，目光有些呆滞，衣衫褴褛，头发也有些凌乱，而且无论他怎么喊，男孩就是不理他。男孩的周围，有一排排的月饼礼盒，上边贴满了个各种情绪的标签。走上前，他看见“智慧”和“勇气”，他曾经毫不犹豫的选择了前者，不过他觉得现在应该换个决定了。只不过男孩前面标有“自卑”与“抑郁”的盒子已经空了。“哎，今天可是中秋，看来今晚是很难见到月亮的了。”他自言自语道。</p>
+<p>还好是中秋，月光可以透过这些黑暗，给每一间黑屋子带来光明。“喂，你看见前面那扇窗了吗？打开它，我们就可以出去了。”男孩仍然不理他，径直向前，甚至连头也不回。“终究还是孩子。”他一边叹着气，一边跟了过去。走了几步他就看见一个小女孩的骸骨横在前方，月光下显得格外阴森。而小男孩由于留恋外边的新鲜空气再也听不到他的声音了。就好像月光之下有塞壬的歌声似的。</p>
+<p>他也不晓得为何清楚的记得过去了两周，大概是处于艰难险境的人对时间更为敏感吧。小男孩最终还是倒在了小女孩的身旁。“是我害了他。”不过这句话他没有说出口，因为他的身边已经没有其他人了。求生的欲望越来越强烈，回过头，门是虚掩这的，而且无论如何都无法反锁。他想过从这扇门中穿过去，只不过竟然有些怕那些人都聚集在门口，他一时间招架不住，于是还是选择跳窗。</p>
+<p>不知道是已经没有退路还是求生的愿望过于强烈，拉开窗户，几个跟头，他就翻入了下一层。</p>
+<p>虽然是高层，但是还是阴森森的像一个地下室。昏黄的灯光下边，照亮的几处蜘蛛网。他只有拼命的奔跑，只不过这里除了实验室还是实验室，难道这里住着一个和他一样的工作狂吗？他很清楚他这样很快就会被后边的人追上。“快过来这里，这里很安全！”走近细看，那人竟然是他的姑姑。他也来不及多想了。</p>
+<p>暂时松了一口气，他瘫软在地上，余光扫过地面，一批批的黑影掠过。那她姑姑呢？为什么他可以随意走动？为什么她知道知道这里就是绝对安全的？为什么……难道？他不允许自己再这么想下去了。</p>
+<p>“他就藏在这里。快点！”一个似曾相识的声音，十分钟之前是如何告诉自己这里是如何安全，现在有是如何把自己推向绝望的深渊的，当然这就是人性，他早就已经见惯，这次却疏忽大意。当然他终究是个理性的动物，抓紧门锁，外边向右转一圈，他就向左转一圈，累了就干脆锁死，就这样一直僵持着。</p>
+<p>“无论如何我也要救我的孩子。”门外传来一阵叹息。</p>
+<p>母亲受人驱使只是为了救子吗？他的心忽然颤了一下，他知道这种情况母爱是绝对不会讲道理的。他松开门锁，放弃了抵抗。</p>
+<p>“你要用我来换你的孩子可以，但是我出去一定杀了你！”这话他是吼出去的。</p>
+<p>“好！”对面毫不迟疑。</p>
+<p>门开了。</p>
+<p>里面走出了一个瞋目怒视的人 ，浑身散发着杀气，仿佛眼神都可以杀人。只有那个为了救儿子可以赔上性命的人还站在那里，似乎在等待最后的仲裁。现在两方都已经切身感受到，面对死亡本身就该无所畏惧。</p>
+<p>随从的人早已经被吓破了胆，她还是义无反顾的站在那里，他死死的扼住她的咽喉，哪怕是他的长辈，哪怕帮助过他又马上背叛了他。这些他都不再想，因为他早已经被愤怒所淹没。他死死的攥住她的脖子，仿佛下一秒就能像向捏死一只蚂蚁一样捏死他。只不过，他突然松开了手。“带我去见他。你快点！”冷冰冰的语气，一点亲情的味道都没有了。她不回应，只是不停的咳嗽。</p>
+<p>回到了之前的地方，之前的一男一女早已不见，地下只剩下一个破旧的书包，是他少年时期用过的，他解释不清楚。黑屋里走出个人影，正是先前日子倒下的小男孩，不同的是，他变得干净帅气又阳光。“是你救了我！”男孩嘴角上扬。</p>
+<p>“我要去报警。你去自首？”这位好好先生第一次表现的这么富有攻击性。</p>
+<p>去警局的路上，之前发生的一切好像都消失了，就连那件屋子也在慢慢的崩坏。<br>路的尽头，她的妻子在等着他，她也经历了同样的事。<br>她首先打破了这一宁静，“亲爱的我想写本书。”</p>
+<p>“嗯？”</p>
+<p>“你之前不是说过每个人走不出自己的世界吗？”</p>
+<p>“那你这本书的名字就叫做《房间》好了。”</p>
+<p>“这是一个主人格被邪恶人格囚禁的故事。”</p>
+<p>“而且主人格终将获得胜利。”</p>
+<p>他们彼此一次笑，又是黄昏，落日的石阶前，一切坎坷都被照的透亮。</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>Dream</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>浅析磁盘阵列</title>
+    <url>/2019/06/06/%E6%B5%85%E6%9E%90%E7%A3%81%E7%9B%98%E9%98%B5%E5%88%97/</url>
+    <content><![CDATA[<p>当你电脑有两块以上的硬盘的时候，那你就可以试试磁盘阵列了。</p>
+<h3 id="RAID-0"><a href="#RAID-0" class="headerlink" title="RAID 0"></a>RAID 0</h3><p>把文件拆分开来放在不同别的磁盘里，如果你有两块磁盘的话，这样子硬盘读写的速度会快一倍，但是其中一块盘坏了整个数据都没办法恢复了。</p>
+<h3 id="RAID-1"><a href="#RAID-1" class="headerlink" title="RAID 1"></a>RAID 1</h3><p>RAID 1其实就是一种为了防止数据丢失而采取的措施，是采用备份的方式，无论你有多少块磁盘，那么可用的容量都是一块盘的大小，其他的都是备份磁盘。</p>
+<h3 id="RAID-5"><a href="#RAID-5" class="headerlink" title="RAID 5"></a>RAID 5</h3><p>RAID 5至少要三块磁盘，大致沿袭了RAID 1 的原理，只是在其基础上加上了一份校验码。如果某一块盘损坏，那么还可以通过校验码推算回来，但是如果你损坏了两块的磁盘，那么就是RAID也救不了你的数据了。</p>
+<h3 id="RAID-10"><a href="#RAID-10" class="headerlink" title="RAID 10"></a>RAID 10</h3><p>RAID 10 集成了RAID 0和RAID 1的有点，就是先用RAID 0 的拆分，然后是用RAID 0的复制，所以至少需要4块磁盘。</p>
+]]></content>
+      <categories>
+        <category>零零碎碎的技术玩意</category>
+      </categories>
+      <tags>
+        <tag>PC</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习入门 常用算法介绍</title>
+    <url>/2018/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%20--%20%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D/</url>
+    <content><![CDATA[<p><img src="https://upload-images.jianshu.io/upload_images/5415189-e66260dd37d757ff.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>先介绍几个概念：<br>决策树，朴素贝叶斯，梯度下降，线性回归</p>
+<h6 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h6><p><img src="https://upload-images.jianshu.io/upload_images/5415189-f37a38f7e9df78e0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="决策树"></p>
+<h6 id="朴素贝叶斯"><a href="#朴素贝叶斯" class="headerlink" title="朴素贝叶斯"></a>朴素贝叶斯</h6><p>这里我只想到贝叶斯的概率公式，欢迎补充。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-65e0af1eb1734358.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="朴素贝叶斯"></p>
+<h6 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h6><p>记得第一次看见这个概念是在多元微积分里，这次捡起来。<br>梯度下降用来最小化误差。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-f4b1b21b270a9c06.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="梯度下降"></p>
+<h6 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h6><p>提到这个直接想到的就是最小二乘法，通过散点拟合线性方程。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-fe351752fec3c1ae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="线性回归"></p>
+<p>接下来是机器学习常用的算法：</p>
+<h6 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h6><p><img src="https://upload-images.jianshu.io/upload_images/5415189-e2fab8ee953c815b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="逻辑回归"></p>
+<p>######SVM(支持向量机)<br><img src="https://upload-images.jianshu.io/upload_images/5415189-53a5d8769f78fe3a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="SVM"></p>
+<p>######核函数<br><img src="https://upload-images.jianshu.io/upload_images/5415189-31d2141cfc4b716f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="核函数"></p>
+<h6 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a>神经网络</h6><p><img src="https://upload-images.jianshu.io/upload_images/5415189-1315d116fe1ca629.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="神经网络"><br><img src="https://upload-images.jianshu.io/upload_images/5415189-e439bcd7f1186834.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="神经网络类比生物神经元"></p>
+<p>######K均值聚类<br>如果数据有很多堆呢？<br><img src="https://upload-images.jianshu.io/upload_images/5415189-2c630e226766faf8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="K聚类"></p>
+<h6 id="层次聚类"><a href="#层次聚类" class="headerlink" title="层次聚类"></a>层次聚类</h6><p>如果不知道k聚类分成多少堆，这时候用层次聚类再合适不过了。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-65a6b5e58d3c61e2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="层次聚类"></p>
+<h4 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h4><p>可以说逻辑回归是一个把数据分成部分的忍者，而SVM又一个对周围的数据比较挑剔。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-693919b7a72cb537.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="逻辑回归和SVM"><br>神经网络是一个忍者群，核函数让不同的东西上升或者下降。<br><img src="https://upload-images.jianshu.io/upload_images/5415189-05c9155c69252da1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="神经网络和核函数"></p>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>Machine learning</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>test latex</title>
+    <url>/2019/07/14/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1><h3 id="三级标题"><a href="#三级标题" class="headerlink" title="三级标题"></a>三级标题</h3><p>Simple inline $a = b + c$.</p>
+<p>$$\begin{array}{c|lcr}<br>n &amp; \text{Left} &amp; \text{Center} &amp; \text{Right} \\<br>\hline<br>1 &amp; 1.97 &amp; 5 &amp; 12 \\<br>2 &amp; -11 &amp; 19 &amp; -80 \\<br>3 &amp; 70 &amp; 209 &amp; 1+i \\<br>\end{array}$$ </p>
+]]></content>
+      <tags>
+        <tag>Latex</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解密SSD，slc、mlc、tlc闪存芯片颗粒区别介绍</title>
+    <url>/2019/02/12/%E8%A7%A3%E5%AF%86SSD%EF%BC%8Cslc%E3%80%81mlc%E3%80%81tlc%E9%97%AA%E5%AD%98%E8%8A%AF%E7%89%87%E9%A2%97%E7%B2%92%E5%8C%BA%E5%88%AB%E4%BB%8B%E7%BB%8D/</url>
+    <content><![CDATA[<h2 id="slc、mlc、tlc闪存芯片颗粒区别介绍"><a href="#slc、mlc、tlc闪存芯片颗粒区别介绍" class="headerlink" title="slc、mlc、tlc闪存芯片颗粒区别介绍"></a>slc、mlc、tlc闪存芯片颗粒区别介绍</h2><p>在U盘、SSD等固态存储产品中，闪存芯片颗粒是核心，其关乎产品成本、寿命以及速度。闪存芯片颗粒主要有三种类型，分别为SLC、MLC、TLC，三者之间的区别，如下。</p>
+<p>SLC = Single-Level Cell<br>，即1bit/cell，速度快寿命长，价格贵（约MLC 3倍以上的价格），约10万次擦写寿命；</p>
+<p>MLC = Multi-Level<br>Cell，即2bit/cell，速度一般寿命一般，价格一般，约3000—10000次擦写寿命</p>
+<p>TLC =Trinary-Level Cell，即3bit/cell，也有Flash厂家叫8LC，速度慢寿命短，价格便宜，约500-1000次擦写寿命。</p>
+<h5 id="1-速度最快，寿命最长，价格最贵的SLC颗粒"><a href="#1-速度最快，寿命最长，价格最贵的SLC颗粒" class="headerlink" title="1.速度最快，寿命最长，价格最贵的SLC颗粒"></a>1.速度最快，寿命最长，价格最贵的SLC颗粒</h5><p>intel 傲腾900P固态硬盘是英特尔针对商业客户和游戏发烧友推出高性能SSD，它使用的就是SLC闪存颗粒，</p>
+<p>持续写入速度2.0G/S，4K写入50万IOPS；</p>
+<p>持续读取速度2.4G/S，4K读取55万IOPS；</p>
+<p>寿命约为全盘写入15000次，每天全盘写入一次，预估寿命为40年；</p>
+<p>SLC闪存颗粒就像这款搭载它的傲腾900P一样，尽管已经是“宇宙级最强SSD”了，但因为贵，所以销量惨淡！</p>
+<h5 id="2-速度较快，寿命较长、价格较贵的MLC颗粒"><a href="#2-速度较快，寿命较长、价格较贵的MLC颗粒" class="headerlink" title="2.速度较快，寿命较长、价格较贵的MLC颗粒"></a>2.速度较快，寿命较长、价格较贵的MLC颗粒</h5><p>三星960 Pro是三星针对游戏发烧友和专业级用户推出的高性能SSD，它使用的是MLC闪存颗粒，</p>
+<p>持续写入速度是2.0G/S,4K写入33万IOPS;</p>
+<p>持续读取速度是3.2G/S，4K读取33万IOPS；</p>
+<p>寿命约为全盘写入1500次，每天全盘写入一次，预估寿命为4年；</p>
+<p>对普通人用户来说，SLC颗粒就像劳斯莱斯幻影，好是好，但是太贵，所以，极少有人买；MLC颗粒就像宝马7系，车还算可以，但还是贵，买的人还是少；</p>
+<p>只有TLC颗粒就像福克斯，虽然性能和品质远不如劳斯莱斯和宝马730，但是价格实惠，所以，买的人最多；</p>
+<h5 id="3-速度较慢，寿命较短、价格最便宜的TLC颗粒"><a href="#3-速度较慢，寿命较短、价格最便宜的TLC颗粒" class="headerlink" title="3.速度较慢，寿命较短、价格最便宜的TLC颗粒"></a>3.速度较慢，寿命较短、价格最便宜的TLC颗粒</h5><p>三星针对消费级市场推出的廉价版SSD，虽然它采用了速度最慢的TLC闪存颗粒，但因为它使用了PCIE3.0*4通道作为数据传输通道，所以，它的读取速度还是甩了所有SATA接口SSD几条街；</p>
+<p>三星960EVO持续写入速度为1.5G/S，4K写入30万IOPS；</p>
+<p>持续读取速度为3.2G/S，4K读取33万IOPS；</p>
+<p>寿命约为全盘写入700次，每天全盘写入1次，预估寿命为2年；</p>
+<p>当然，普通用户根本没有那么大的写入数据需求，以每天20G的数据写入量，即便是寿命最短的三星960EVO，预期寿命也有20年；</p>
+<p>最后，我想说，以普通用户的日常数据处理量，TCL闪存颗粒肯定够用了，没有必要去追求什么SLC、MLC；我们只要性价比，我突然发现一个事实：目前某东上热销的SSD都是TLC固态！</p>
+<h5 id="4-QLC"><a href="#4-QLC" class="headerlink" title="4. QLC"></a>4. QLC</h5><p>x看在一块钱一个G的基本都是QLC了，将就用吧。</p>
+<p><a href="https://zhidao.baidu.com/question/2055990913373032707.html" target="_blank" rel="noopener">转载地址</a></p>
+]]></content>
+      <categories>
+        <category>零零碎碎的技术玩意</category>
+      </categories>
+      <tags>
+        <tag>PC</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>网络代理</title>
+    <url>/2020/05/08/%E7%BD%91%E7%BB%9C%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[<h3 id="ssh-代理"><a href="#ssh-代理" class="headerlink" title="ssh 代理"></a>ssh 代理</h3><p><strong>ssh 各项参数</strong></p>
+<h5 id="正向代理"><a href="#正向代理" class="headerlink" title="正向代理"></a>正向代理</h5><h5 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h5><h5 id="socket代理"><a href="#socket代理" class="headerlink" title="socket代理"></a>socket代理</h5><h3 id="ssr代理"><a href="#ssr代理" class="headerlink" title="ssr代理"></a>ssr代理</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget --no-check-certificate https://github.com/teddysun/across/raw/master/bbr.sh</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">chmod +x bbr.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh</span><br><span class="line"></span><br><span class="line">chmod +x shadowsocks-all.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./shadowsocks-all.sh 2&gt;&amp;1 | tee shadowsocks-all.log</span><br></pre></td></tr></table></figure>
+
+<p>加密方式随便，一般默认即可。</p>
+]]></content>
+      <categories>
+        <category>零零碎碎的技术玩意</category>
+      </categories>
+      <tags>
+        <tag>Network</tag>
+      </tags>
+  </entry>
+</search>
